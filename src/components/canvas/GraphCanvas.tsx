@@ -106,8 +106,14 @@ export function GraphCanvas() {
                 className="bg-muted/5"
             >
                 <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
-                <Controls />
-                <MiniMap zoomable pannable className="!bg-background !border-border" />
+                <Controls
+                    className="!bg-card/95 !backdrop-blur-sm !border !border-border !shadow-lg [&>button]:!bg-background [&>button]:!border-border [&>button]:!text-foreground [&>button:hover]:!bg-muted"
+                />
+                <MiniMap
+                    zoomable
+                    pannable
+                    className="!bg-background !border-border !w-24 !h-24 md:!w-48 md:!h-32"
+                />
             </ReactFlow>
         </div>
     )

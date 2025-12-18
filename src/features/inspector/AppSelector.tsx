@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useAppStore } from '@/store/useAppStore'
 import { cn } from '@/lib/utils'
@@ -28,6 +28,7 @@ const getIcon = (iconName?: string) => {
 export function AppSelector() {
     const { selectedAppId, selectApp } = useAppStore()
     const [isOpen, setIsOpen] = useState(true)
+    const containerRef = useRef<HTMLDivElement>(null)
 
     const { data: apps, isLoading } = useQuery<App[]>({
         queryKey: ['apps'],
@@ -40,8 +41,25 @@ export function AppSelector() {
 
     const selectedApp = apps?.find(a => a.id === selectedAppId)
 
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+                setIsOpen(false)
+            }
+        }
+
+        if (isOpen) {
+            document.addEventListener('mousedown', handleClickOutside)
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside)
+        }
+    }, [isOpen])
+
     return (
-        <div className="absolute top-4 left-4 z-50 flex flex-col gap-2 w-[280px] md:w-[300px] animate-in slide-in-from-left-4 fade-in duration-500">
+        <div ref={containerRef} className="absolute top-4 left-4 z-50 flex flex-col gap-2 w-[220px] sm:w-[260px] md:w-[300px] animate-in slide-in-from-left-4 fade-in duration-500">
             {/* Header / Toggle */}
             <div className="flex items-center gap-2">
                 <div className="h-10 w-10 bg-white text-black rounded-lg flex items-center justify-center shadow-lg shrink-0">

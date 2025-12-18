@@ -67,7 +67,7 @@ export const ServiceNode = memo(({ id, data, selected }: NodeProps) => {
 
     return (
         <Card className={cn(
-            "w-[240px] shadow-xl border bg-card/95 backdrop-blur-sm transition-all duration-200",
+            "w-[200px] shadow-xl border bg-card/95 backdrop-blur-sm transition-all duration-200",
             selected ? "ring-2 ring-primary border-primary shadow-2xl scale-105" : "border-border hover:border-primary/50"
         )}>
             {/* Handles */}
