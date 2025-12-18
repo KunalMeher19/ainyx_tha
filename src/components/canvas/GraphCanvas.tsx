@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import {
     ReactFlow,
     Background,
@@ -35,6 +35,9 @@ export function GraphCanvas() {
     const [nodes, setNodes, onNodesChange] = useNodesState([])
     const [edges, setEdges, onEdgesChange] = useEdgesState([])
 
+    // Track if we've loaded data for the current app to prevent race conditions
+    const loadedAppIdRef = useRef<string | null>(null)
+
     const { data, isLoading, isError } = useQuery({
         queryKey: ['graph', selectedAppId],
         queryFn: async () => {
@@ -49,6 +52,9 @@ export function GraphCanvas() {
     // Load persisted data or fallback to API data
     useEffect(() => {
         if (!selectedAppId) return
+
+        // Mark that we're transitioning and haven't loaded data yet
+        loadedAppIdRef.current = null
 
         const persisted = loadFlowData(selectedAppId)
 
@@ -66,18 +72,28 @@ export function GraphCanvas() {
             if (persisted.viewport) {
                 setViewport(persisted.viewport, { duration: 0 })
             }
+
+            // Mark as loaded
+            loadedAppIdRef.current = selectedAppId
         } else if (data) {
             console.log(`Loading fresh API data for app: ${selectedAppId}`, data.nodes?.length || 0, 'nodes')
 
             // Fallback to API data for first time or if persisted data is invalid
             setNodes(data.nodes as never[] || [])
             setEdges(data.edges as never[] || [])
+
+            // Mark as loaded
+            loadedAppIdRef.current = selectedAppId
         }
     }, [selectedAppId, data, setNodes, setEdges, setViewport])
 
     // Persist nodes, edges, and viewport whenever they change
+    // BUT ONLY if we've successfully loaded data for this app
     useEffect(() => {
-        if (!selectedAppId || nodes.length === 0) return
+        // CRITICAL: Don't save if we haven't loaded data yet or app doesn't match
+        if (!selectedAppId || nodes.length === 0 || loadedAppIdRef.current !== selectedAppId) {
+            return
+        }
 
         const viewport = getViewport()
         saveFlowData(selectedAppId, { nodes, edges, viewport })
