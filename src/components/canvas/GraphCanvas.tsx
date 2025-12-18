@@ -11,6 +11,7 @@ import {
     BackgroundVariant,
     type Node,
     useReactFlow,
+    type Viewport,
 } from '@xyflow/react'
 import '@xyflow/react/dist/style.css'
 import { useQuery } from '@tanstack/react-query'
@@ -18,6 +19,7 @@ import { ServiceNode } from './ServiceNode'
 import { DatabaseNode } from './DatabaseNode'
 import { useAppStore } from '@/store/useAppStore'
 import { Loader2 } from 'lucide-react'
+import { saveFlowData, loadFlowData } from '@/lib/flowPersistence'
 
 const nodeTypes = {
     service: ServiceNode,
@@ -28,7 +30,7 @@ export function GraphCanvas() {
     const selectedAppId = useAppStore((state) => state.selectedAppId)
     const selectNode = useAppStore((state) => state.selectNode)
     const selectedNodeId = useAppStore((state) => state.selectedNodeId)
-    const { fitView } = useReactFlow()
+    const { fitView, setViewport, getViewport } = useReactFlow()
 
     const [nodes, setNodes, onNodesChange] = useNodesState([])
     const [edges, setEdges, onEdgesChange] = useEdgesState([])
@@ -44,13 +46,33 @@ export function GraphCanvas() {
         enabled: !!selectedAppId
     })
 
-    // Sync Data
+    // Load persisted data or fallback to API data
     useEffect(() => {
-        if (data) {
-            setNodes(data.nodes || [])
-            setEdges(data.edges || [])
+        if (!selectedAppId) return
+
+        const persisted = loadFlowData(selectedAppId)
+
+        if (persisted) {
+            // Load from localStorage
+            setNodes(persisted.nodes as never[] || [])
+            setEdges(persisted.edges as never[] || [])
+            if (persisted.viewport) {
+                setViewport(persisted.viewport, { duration: 0 })
+            }
+        } else if (data) {
+            // Fallback to API data for first time
+            setNodes(data.nodes as never[] || [])
+            setEdges(data.edges as never[] || [])
         }
-    }, [data, setNodes, setEdges])
+    }, [selectedAppId, data, setNodes, setEdges, setViewport])
+
+    // Persist nodes, edges, and viewport whenever they change
+    useEffect(() => {
+        if (!selectedAppId || nodes.length === 0) return
+
+        const viewport = getViewport()
+        saveFlowData(selectedAppId, { nodes, edges, viewport })
+    }, [nodes, edges, selectedAppId, getViewport])
 
     // Keyboard Shortcuts
     useEffect(() => {
@@ -87,6 +109,13 @@ export function GraphCanvas() {
         selectNode(null)
     }
 
+    // Handle viewport changes (zoom, pan) to persist them
+    const onMove = useCallback((_event: unknown, viewport: Viewport) => {
+        if (selectedAppId) {
+            saveFlowData(selectedAppId, { nodes, edges, viewport })
+        }
+    }, [selectedAppId, nodes, edges])
+
     if (!selectedAppId) {
         return <div className="flex h-full items-center justify-center text-muted-foreground bg-muted/5 border-2 border-dashed m-4 rounded-xl">
             Select an app from the sidebar to view its architecture.
@@ -111,6 +140,7 @@ export function GraphCanvas() {
                 onConnect={onConnect}
                 onNodeClick={handleNodeClick}
                 onPaneClick={handlePaneClick}
+                onMove={onMove}
                 nodeTypes={nodeTypes}
                 fitView
                 deleteKeyCode={['Backspace', 'Delete']}
