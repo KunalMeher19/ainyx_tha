@@ -106,13 +106,15 @@ export function AppSelector() {
                     <MoreHorizontal className="h-4 w-4 text-muted-foreground shrink-0" />
                 </Button>
 
-                <Button
-                    size="icon"
-                    onClick={handleAddNode}
-                    className="h-10 w-10 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shrink-0"
-                >
-                    <Plus className="h-5 w-5" />
-                </Button>
+                {selectedAppId && (
+                    <Button
+                        size="icon"
+                        onClick={handleAddNode}
+                        className="h-10 w-10 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shrink-0"
+                    >
+                        <Plus className="h-5 w-5" />
+                    </Button>
+                )}
             </div>
 
             {/* Dropdown Panel */}

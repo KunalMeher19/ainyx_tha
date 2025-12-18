@@ -57,7 +57,7 @@ export const DatabaseNode = memo(({ id, data, selected }: NodeProps) => {
 
     return (
         <Card className={cn(
-            "w-[200px] shadow-xl border bg-slate-950/95 backdrop-blur-sm transition-all duration-200",
+            "w-[180px] shadow-xl border bg-slate-950/95 backdrop-blur-sm transition-all duration-200",
             selected ? "ring-2 ring-blue-500 border-blue-500 shadow-2xl scale-105" : "border-slate-700 hover:border-blue-500/50"
         )}>
             {/* Handles */}
