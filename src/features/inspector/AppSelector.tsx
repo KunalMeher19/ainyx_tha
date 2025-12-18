@@ -5,7 +5,9 @@ import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
-import { Loader2, Search, ChevronRight, MoreHorizontal, Database, Box, Layers, Code2 } from 'lucide-react'
+import { Loader2, Search, ChevronRight, MoreHorizontal, Database, Box, Layers, Code2, Plus } from 'lucide-react'
+import { useReactFlow } from '@xyflow/react'
+import type { Node as FlowNode } from '@xyflow/react'
 
 // App interface
 interface App {
@@ -28,8 +30,10 @@ const getIcon = (iconName?: string) => {
 export function AppSelector() {
     const selectedAppId = useAppStore((state) => state.selectedAppId)
     const selectApp = useAppStore((state) => state.selectApp)
+    const selectNode = useAppStore((state) => state.selectNode)
     const [isOpen, setIsOpen] = useState(true)
     const containerRef = useRef<HTMLDivElement>(null)
+    const { setNodes, screenToFlowPosition } = useReactFlow()
 
     const { data: apps, isLoading } = useQuery<App[]>({
         queryKey: ['apps'],
@@ -45,7 +49,7 @@ export function AppSelector() {
     // Close dropdown when clicking outside
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
-            if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+            if (containerRef.current && !containerRef.current.contains(event.target as HTMLElement)) {
                 setIsOpen(false)
             }
         }
@@ -58,6 +62,31 @@ export function AppSelector() {
             document.removeEventListener('mousedown', handleClickOutside)
         }
     }, [isOpen])
+
+    const handleAddNode = () => {
+        // Get viewport center position
+        const centerX = window.innerWidth / 2
+        const centerY = window.innerHeight / 2
+        const position = screenToFlowPosition({ x: centerX, y: centerY })
+
+        // Create new node with unique ID
+        const newNodeId = `node-${Date.now()}`
+        const newNode: FlowNode = {
+            id: newNodeId,
+            type: 'service',
+            position,
+            data: {
+                label: 'New Service',
+                status: 'healthy' as const,
+                cpu: 10,
+                memory: 512,
+                nodeType: 'service'
+            }
+        }
+
+        setNodes((nds) => [...nds, newNode as never])
+        selectNode(newNodeId) // Auto-select the new node
+    }
 
     return (
         <div ref={containerRef} className="absolute top-4 left-4 z-50 flex flex-col gap-2 w-[220px] sm:w-[260px] md:w-[300px] animate-in slide-in-from-left-4 fade-in duration-500">
@@ -75,6 +104,14 @@ export function AppSelector() {
                 >
                     <span className="truncate text-sm">{selectedApp?.name || "Select Application"}</span>
                     <MoreHorizontal className="h-4 w-4 text-muted-foreground shrink-0" />
+                </Button>
+
+                <Button
+                    size="icon"
+                    onClick={handleAddNode}
+                    className="h-10 w-10 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shrink-0"
+                >
+                    <Plus className="h-5 w-5" />
                 </Button>
             </div>
 
