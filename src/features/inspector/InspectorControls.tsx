@@ -11,7 +11,10 @@ import { ArrowLeft, Cpu, Activity } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 export function InspectorControls() {
-    const { selectedNodeId, selectNode } = useAppStore()
+    const selectedNodeId = useAppStore((state) => state.selectedNodeId)
+    const selectNode = useAppStore((state) => state.selectNode)
+    const activeInspectorTab = useAppStore((state) => state.activeInspectorTab)
+    const setInspectorTab = useAppStore((state) => state.setInspectorTab)
     const { getNode, setNodes } = useReactFlow()
     const node = getNode(selectedNodeId!)
 
@@ -67,7 +70,7 @@ export function InspectorControls() {
                 </Badge>
             </div>
 
-            <Tabs defaultValue="config" className="flex-1 flex flex-col">
+            <Tabs value={activeInspectorTab} onValueChange={setInspectorTab} className="flex-1 flex flex-col">
                 <div className="px-4 pt-4 border-b pb-4">
                     <TabsList className="w-full">
                         <TabsTrigger value="config" className="flex-1">Config</TabsTrigger>

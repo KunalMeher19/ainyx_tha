@@ -12,7 +12,8 @@ import { cn } from '@/lib/utils'
 const queryClient = new QueryClient()
 
 function MainLayout() {
-  const { selectedNodeId, selectNode } = useAppStore()
+  const selectedNodeId = useAppStore((state) => state.selectedNodeId)
+  const selectNode = useAppStore((state) => state.selectNode)
 
   return (
     <div className="flex h-screen w-full overflow-hidden bg-background text-foreground font-sans selection:bg-primary/20">

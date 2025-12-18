@@ -3,7 +3,7 @@ import { AppSelector } from './AppSelector'
 import { InspectorControls } from './InspectorControls'
 
 export function InspectorPanel() {
-    const { selectedNodeId } = useAppStore()
+    const selectedNodeId = useAppStore((state) => state.selectedNodeId)
 
     return (
         <div className="flex h-full flex-col w-full overflow-hidden">

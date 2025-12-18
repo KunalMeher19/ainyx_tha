@@ -26,7 +26,8 @@ const getIcon = (iconName?: string) => {
 }
 
 export function AppSelector() {
-    const { selectedAppId, selectApp } = useAppStore()
+    const selectedAppId = useAppStore((state) => state.selectedAppId)
+    const selectApp = useAppStore((state) => state.selectApp)
     const [isOpen, setIsOpen] = useState(true)
     const containerRef = useRef<HTMLDivElement>(null)
 

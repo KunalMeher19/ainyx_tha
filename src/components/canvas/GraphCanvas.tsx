@@ -23,7 +23,8 @@ const nodeTypes = {
 }
 
 export function GraphCanvas() {
-    const { selectedAppId, selectNode } = useAppStore()
+    const selectedAppId = useAppStore((state) => state.selectedAppId)
+    const selectNode = useAppStore((state) => state.selectNode)
     const { fitView } = useReactFlow()
 
     const [nodes, setNodes, onNodesChange] = useNodesState([])

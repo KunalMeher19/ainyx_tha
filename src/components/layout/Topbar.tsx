@@ -3,7 +3,7 @@ import { PanelRightOpen } from 'lucide-react'
 import { useAppStore } from '@/store/useAppStore'
 
 export function Topbar() {
-    const { toggleMobilePanel } = useAppStore()
+    const toggleMobilePanel = useAppStore((state) => state.toggleMobilePanel)
 
     return (
         <div className="flex h-14 items-center justify-between border-b px-4 md:px-6 bg-background z-20">
