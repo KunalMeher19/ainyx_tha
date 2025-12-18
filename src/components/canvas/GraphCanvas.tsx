@@ -112,7 +112,11 @@ export function GraphCanvas() {
                 <MiniMap
                     zoomable
                     pannable
-                    className="!bg-background !border-border !w-24 !h-24 md:!w-48 md:!h-32"
+                    nodeStrokeColor="#8b5cf6"
+                    nodeColor="#1e1e2e"
+                    nodeBorderRadius={6}
+                    maskColor="rgba(0, 0, 0, 0.6)"
+                    className="!bg-background/95 !backdrop-blur-sm !border !border-border !shadow-lg !rounded-lg !w-[120px] !h-[100px] md:!w-[180px] md:!h-[150px]"
                 />
             </ReactFlow>
         </div>
