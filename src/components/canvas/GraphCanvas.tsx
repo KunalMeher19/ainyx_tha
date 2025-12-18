@@ -116,7 +116,7 @@ export function GraphCanvas() {
                     nodeColor="#1e1e2e"
                     nodeBorderRadius={6}
                     maskColor="rgba(0, 0, 0, 0.6)"
-                    className="!bg-background/95 !backdrop-blur-sm !border !border-border !shadow-lg !rounded-lg !w-[120px] !h-[100px] md:!w-[180px] md:!h-[150px]"
+                    className="!bg-background/95 !backdrop-blur-sm !border !border-border !shadow-lg !rounded-lg !w-[120px] !h-[100px] md:!w-[180px] md:!h-[150px] !bottom-2 !right-2 md:!bottom-4 md:!right-4 !flex !items-center !justify-center [&>svg]:!max-w-full [&>svg]:!max-h-full [&>svg]:!w-auto [&>svg]:!h-auto"
                 />
             </ReactFlow>
         </div>
