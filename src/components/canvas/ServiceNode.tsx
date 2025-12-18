@@ -7,7 +7,7 @@ import { Slider } from '@/components/ui/slider'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
-import { Cpu, Server, HardDrive, Globe, CheckCircle2, AlertTriangle, XCircle, Settings } from 'lucide-react'
+import { Cpu, Server, HardDrive, Globe, CheckCircle2, AlertTriangle, XCircle, Settings, Database } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 // Define the Node Data type
@@ -46,6 +46,17 @@ export const ServiceNode = memo(({ id, data, selected }: NodeProps) => {
     const status = nodeData.status || 'healthy'
     const { label: statusLabel, color, icon: StatusIcon } = statusConfig[status] || statusConfig.healthy
 
+    // Icon Selection
+    let ServiceIcon = Server
+    const type = (nodeData.nodeType as string) || ''
+    const lowerLabel = nodeData.label.toLowerCase()
+
+    if (type === 'db' || lowerLabel.includes('db') || lowerLabel.includes('postgres') || lowerLabel.includes('redis') || lowerLabel.includes('mongo')) {
+        ServiceIcon = Database
+    } else if (lowerLabel.includes('api') || lowerLabel.includes('gateway')) {
+        ServiceIcon = Globe
+    }
+
     const updateData = useCallback((key: keyof ServiceNodeData, value: unknown) => {
         setNodes((nodes) =>
             nodes.map((node) => {
@@ -69,7 +80,7 @@ export const ServiceNode = memo(({ id, data, selected }: NodeProps) => {
             <CardHeader className="flex flex-row items-center justify-between pb-2 p-4 space-y-0">
                 <div className="flex items-center gap-3">
                     <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                        <Server className="h-6 w-6 text-primary" />
+                        <ServiceIcon className="h-6 w-6 text-primary" />
                     </div>
                     <div>
                         <Input

@@ -10,6 +10,7 @@ import {
     type Connection,
     BackgroundVariant,
     type Node,
+    useReactFlow,
 } from '@xyflow/react'
 import '@xyflow/react/dist/style.css'
 import { useQuery } from '@tanstack/react-query'
@@ -23,8 +24,7 @@ const nodeTypes = {
 
 export function GraphCanvas() {
     const { selectedAppId, selectNode } = useAppStore()
-    // const { fitView } = useReactFlow() // fitView needs to be used inside an effect or event? 
-    // Actually GraphCanvas is inside ReactFlowProvider (in Parent), so useReactFlow works.
+    const { fitView } = useReactFlow()
 
     const [nodes, setNodes, onNodesChange] = useNodesState([])
     const [edges, setEdges, onEdgesChange] = useEdgesState([])
@@ -45,11 +45,23 @@ export function GraphCanvas() {
         if (data) {
             setNodes(data.nodes || [])
             setEdges(data.edges || [])
-            // fitView({ duration: 800 }) // Auto fit view when data loads?
-            // But fitView might not work if nodes aren't rendered dimensions yet.
-            // We can use default behavior.
         }
-    }, [data, setNodes, setEdges]) // Re-run when data changes (app switch)
+    }, [data, setNodes, setEdges])
+
+    // Keyboard Shortcuts
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if ((e.target as HTMLElement).tagName === 'INPUT' || (e.target as HTMLElement).tagName === 'TEXTAREA') return
+
+            if (e.key.toLowerCase() === 'f') {
+                e.preventDefault()
+                fitView({ duration: 400, padding: 0.2 })
+            }
+        }
+
+        window.addEventListener('keydown', handleKeyDown)
+        return () => window.removeEventListener('keydown', handleKeyDown)
+    }, [fitView])
 
     const onConnect = useCallback(
         (params: Connection) => setEdges((eds) => addEdge(params, eds)),
