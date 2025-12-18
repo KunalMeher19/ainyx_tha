@@ -52,7 +52,14 @@ export function GraphCanvas() {
 
         const persisted = loadFlowData(selectedAppId)
 
-        if (persisted) {
+        // VALIDATION: Only use persisted data if it's valid and belongs to this app
+        if (persisted &&
+            persisted.appId === selectedAppId &&
+            persisted.nodes &&
+            persisted.nodes.length > 0) {
+
+            console.log(`Loading persisted data for app: ${selectedAppId}`, persisted.nodes.length, 'nodes')
+
             // Load from localStorage
             setNodes(persisted.nodes as never[] || [])
             setEdges(persisted.edges as never[] || [])
@@ -60,7 +67,9 @@ export function GraphCanvas() {
                 setViewport(persisted.viewport, { duration: 0 })
             }
         } else if (data) {
-            // Fallback to API data for first time
+            console.log(`Loading fresh API data for app: ${selectedAppId}`, data.nodes?.length || 0, 'nodes')
+
+            // Fallback to API data for first time or if persisted data is invalid
             setNodes(data.nodes as never[] || [])
             setEdges(data.edges as never[] || [])
         }
@@ -90,11 +99,24 @@ export function GraphCanvas() {
                 e.preventDefault()
                 selectNode(null)
             }
+
+            // Ctrl+Shift+C - Clear cache for current app (debug feature)
+            if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'c' && selectedAppId) {
+                e.preventDefault()
+                const key = `ainyx_flow_${selectedAppId}`
+                localStorage.removeItem(key)
+                console.log(`Cleared cache for app: ${selectedAppId}`)
+                // Reload from API
+                if (data) {
+                    setNodes(data.nodes as never[] || [])
+                    setEdges(data.edges as never[] || [])
+                }
+            }
         }
 
         window.addEventListener('keydown', handleKeyDown)
         return () => window.removeEventListener('keydown', handleKeyDown)
-    }, [fitView, selectNode, selectedNodeId])
+    }, [fitView, selectNode, selectedNodeId, selectedAppId, data, setNodes, setEdges])
 
     const onConnect = useCallback(
         (params: Connection) => setEdges((eds) => addEdge(params, eds)),

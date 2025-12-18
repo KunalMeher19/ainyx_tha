@@ -3,16 +3,18 @@ import type { Node, Edge, Viewport } from '@xyflow/react'
 const STORAGE_PREFIX = 'ainyx_flow_'
 
 export interface PersistedFlowData {
+    appId: string // Store which app this data belongs to for validation
     nodes: Node[]
     edges: Edge[]
     viewport?: Viewport
 }
 
 // Save flow data for a specific app
-export function saveFlowData(appId: string, data: PersistedFlowData): void {
+export function saveFlowData(appId: string, data: Omit<PersistedFlowData, 'appId'>): void {
     try {
         const key = `${STORAGE_PREFIX}${appId}`
-        localStorage.setItem(key, JSON.stringify(data))
+        const dataWithAppId: PersistedFlowData = { ...data, appId }
+        localStorage.setItem(key, JSON.stringify(dataWithAppId))
     } catch (error) {
         console.error('Failed to save flow data:', error)
     }
@@ -23,7 +25,19 @@ export function loadFlowData(appId: string): PersistedFlowData | null {
     try {
         const key = `${STORAGE_PREFIX}${appId}`
         const stored = localStorage.getItem(key)
-        return stored ? JSON.parse(stored) : null
+
+        if (!stored) return null
+
+        const parsed: PersistedFlowData = JSON.parse(stored)
+
+        // VALIDATION: Ensure the persisted data matches the requested app
+        if (parsed.appId !== appId) {
+            console.warn(`Data mismatch: Expected appId "${appId}", found "${parsed.appId}". Clearing corrupted cache.`)
+            localStorage.removeItem(key)
+            return null
+        }
+
+        return parsed
     } catch (error) {
         console.error('Failed to load flow data:', error)
         return null
