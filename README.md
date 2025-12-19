@@ -17,8 +17,10 @@ A professional, responsive "App Graph Builder" UI built with React, ReactFlow, T
 - **➕ Add Node Button** - Create new service nodes dynamically at viewport center
 - **🎨 Distinct Node Types** - Service (purple/violet theme) and Database (slate/blue theme) nodes with different styling, icons, and controls
 - **💾 Persistent Edits** - All inspector edits persist to node data immediately
-- **⌨️ Keyboard Shortcuts**
+- **⌨️ Keyboard Shortcuts** - On-screen shortcuts card with 5 shortcuts:
   - `F` - Fit view to canvas
+  - `P` - Toggle inspector panel (smart open/close)
+  - `A` - Auto-align nodes in grid layout
   - `I` or `Escape` - Close inspector panel
   - `Delete` or `Backspace` - Delete selected node
 
@@ -97,7 +99,7 @@ npm run lint        # ESLint checks
 - ✅ **Add Node Button** - Creates new service nodes at viewport center
 - ✅ **Node Types** - Service vs Database with distinct styling
 - ✅ **Persist Edits** - Inspector changes update node data immediately
-- ✅ **Keyboard Shortcuts** - F (fit view), I/Escape (close inspector)
+- ✅ **Keyboard Shortcuts** - Visual shortcuts card + 5 working shortcuts (F, P, A, I/Escape, Delete/Backspace)
 
 ---
 
@@ -115,6 +117,8 @@ src/
 │   ├── layout/           # App shell
 │   │   ├── Sidebar.tsx          # Left navigation sidebar
 │   │   └── Topbar.tsx           # Top navigation bar
+│   ├── shortcuts/        # Keyboard shortcuts
+│   │   └── KeyboardShortcutsCard.tsx # On-screen shortcuts card
 │   └── ui/               # shadcn/ui components (14 components)
 │       ├── button.tsx
 │       ├── card.tsx
@@ -217,7 +221,12 @@ src/
 - Drag nodes → Smooth 60fps dragging
 - Delete node → Press Delete/Backspace
 - Fit view → Press F or use controls
+- Toggle inspector → Press P (opens first node if closed, closes if open)
+- Auto-align nodes → Press A (arranges all nodes in a grid layout)
 - Add node → Click + button in app selector
+
+### Keyboard Shortcuts Card
+A glassmorphism-styled card is permanently visible on the middle-right of the screen on desktop. On mobile devices (<768px), it collapses into a toggle button in the top-right corner to save space, expanding only when tapped.
 
 ---
 
@@ -249,8 +258,11 @@ npm run build
 - ✅ Switch tabs → Config/Runtime tabs work correctly
 - ✅ Press Delete/Backspace → Selected node is removed
 - ✅ Press F → Canvas fits to view
+- ✅ Press P → Toggle inspector panel (opens/closes)
+- ✅ Press A → Auto-align all nodes in grid layout
 - ✅ Press I/Escape → Inspector closes
 - ✅ Click + button → New service node created at center
+- ✅ View shortcuts card → Visible on middle-right of screen
 - ✅ Resize window → Layout responds to mobile/tablet/desktop breakpoints
 
 ---
