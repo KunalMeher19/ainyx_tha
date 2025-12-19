@@ -91,26 +91,41 @@ export function AppSelector() {
     return (
         <div ref={containerRef} className="absolute top-4 left-4 z-50 flex flex-col gap-2 w-[220px] sm:w-[260px] md:w-[300px] animate-in slide-in-from-left-4 fade-in duration-500">
             {/* Header / Toggle */}
-            <div className="flex items-center gap-2">
-                <div className="h-10 w-10 bg-white text-black rounded-lg flex items-center justify-center shadow-lg shrink-0">
-                    {/* Brand Logo Placeholder */}
-                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-6 h-6"><path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /><path d="M2 17L12 22L22 17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /><path d="M2 12L12 17L22 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+            <div className="flex items-start gap-2">
+                {/* Logo & Mobile Add Button Column */}
+                <div className="flex flex-col gap-2 shrink-0">
+                    <div className="h-10 w-10 bg-white text-black rounded-lg flex items-center justify-center shadow-lg shrink-0">
+                        {/* Brand Logo Placeholder */}
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-6 h-6"><path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /><path d="M2 17L12 22L22 17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /><path d="M2 12L12 17L22 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                    </div>
+
+                    {/* Mobile: Add Button under Logo */}
+                    {selectedAppId && (
+                        <Button
+                            size="icon"
+                            onClick={handleAddNode}
+                            className="h-10 w-10 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shrink-0 md:hidden"
+                        >
+                            <Plus className="h-5 w-5" />
+                        </Button>
+                    )}
                 </div>
 
                 <Button
                     variant="secondary"
-                    className="flex-1 justify-between bg-card hover:bg-muted border border-border shadow-lg"
+                    className="flex-1 justify-between bg-card hover:bg-muted border border-border shadow-lg h-10"
                     onClick={() => setIsOpen(!isOpen)}
                 >
                     <span className="truncate text-sm">{selectedApp?.name || "Select Application"}</span>
                     <MoreHorizontal className="h-4 w-4 text-muted-foreground shrink-0" />
                 </Button>
 
+                {/* Desktop: Add Button inline */}
                 {selectedAppId && (
                     <Button
                         size="icon"
                         onClick={handleAddNode}
-                        className="h-10 w-10 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shrink-0"
+                        className="h-10 w-10 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shrink-0 hidden md:flex"
                     >
                         <Plus className="h-5 w-5" />
                     </Button>

@@ -226,7 +226,7 @@ src/
 - Add node → Click + button in app selector
 
 ### Keyboard Shortcuts Card
-A glassmorphism-styled card is permanently visible on the middle-right of the screen on desktop. On mobile devices (<768px), it collapses into a toggle button in the top-right corner to save space, expanding only when tapped.
+A glassmorphism-styled card is permanently visible on the middle-right of the screen on desktop. On mobile devices (<768px), it collapses into a toggle button in the bottom-right corner (above MiniMap) to save space, opening as a centered modal when tapped.
 
 ---
 

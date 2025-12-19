@@ -206,7 +206,7 @@ export function GraphCanvas() {
     }
 
     return (
-        <div className="h-full w-full bg-background">
+        <div className="h-full w-full bg-background relative">
             <ReactFlow
                 nodes={nodes}
                 edges={edges}

@@ -22,13 +22,13 @@ export function KeyboardShortcutsCard() {
 
     return (
         <>
-            {/* Mobile Toggle Button (Top-Right) */}
-            <div className="absolute top-4 right-4 z-40 md:hidden animate-in fade-in zoom-in duration-300">
+            {/* Mobile Toggle Button (Bottom-Right, above MiniMap) */}
+            <div className="absolute bottom-36 right-3 z-40 md:hidden animate-in fade-in zoom-in duration-300">
                 <Button
                     variant={isOpen ? "secondary" : "outline"}
                     size="icon"
                     onClick={() => setIsOpen(!isOpen)}
-                    className="h-10 w-10 shadow-lg bg-card/95 backdrop-blur-sm border-border"
+                    className="h-10 w-10 shadow-lg bg-card/95 backdrop-blur-sm border-border rounded-full"
                 >
                     {isOpen ? (
                         <X className="h-5 w-5" />
@@ -41,11 +41,11 @@ export function KeyboardShortcutsCard() {
             {/* Card Content */}
             <div className={cn(
                 "absolute z-40 w-[280px] transition-all duration-300 ease-in-out",
-                // Mobile Positioning
-                "top-16 right-4",
-                isOpen ? "translate-y-0 opacity-100 pointer-events-auto" : "translate-y-[-10px] opacity-0 pointer-events-none md:translate-y-0 md:opacity-100 md:pointer-events-auto",
-                // Desktop Positioning (Always visible)
-                "md:top-1/2 md:-translate-y-1/2 md:right-4 md:block"
+                // Mobile Positioning (Center Screen with Modal feel)
+                "left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2",
+                isOpen ? "scale-100 opacity-100 pointer-events-auto" : "scale-95 opacity-0 pointer-events-none md:scale-100 md:opacity-100 md:pointer-events-auto md:translate-x-0 md:translate-y-[-50%]",
+                // Desktop Positioning (Middle Right)
+                "md:left-auto md:top-1/2 md:right-4 md:block"
             )}>
                 <Card className="bg-card/95 backdrop-blur-sm border-border shadow-2xl p-4 flex flex-col gap-3">
                     {/* Header */}
