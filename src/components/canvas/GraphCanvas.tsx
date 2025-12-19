@@ -20,6 +20,8 @@ import { DatabaseNode } from './DatabaseNode'
 import { useAppStore } from '@/store/useAppStore'
 import { Loader2 } from 'lucide-react'
 import { saveFlowData, loadFlowData } from '@/lib/flowPersistence'
+import { KeyboardShortcutsCard } from '@/components/shortcuts/KeyboardShortcutsCard'
+
 
 const nodeTypes = {
     service: ServiceNode,
@@ -198,6 +200,7 @@ export function GraphCanvas() {
                     className="!bg-background/95 !backdrop-blur-sm !border !border-border !shadow-lg !rounded-lg !w-[120px] !h-[100px] md:!w-[180px] md:!h-[150px] !bottom-2 !right-2 md:!bottom-4 md:!right-4 !flex !items-center !justify-center [&>svg]:!max-w-full [&>svg]:!max-h-full [&>svg]:!w-auto [&>svg]:!h-auto"
                 />
             </ReactFlow>
+            <KeyboardShortcutsCard />
         </div>
     )
 }
