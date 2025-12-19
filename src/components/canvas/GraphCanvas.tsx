@@ -118,6 +118,41 @@ export function GraphCanvas() {
                 selectNode(null)
             }
 
+            // P - Toggle inspector panel (open first node if none selected, close if open)
+            if (e.key.toLowerCase() === 'p') {
+                e.preventDefault()
+                if (selectedNodeId) {
+                    selectNode(null)
+                } else if (nodes.length > 0) {
+                    selectNode((nodes[0] as Node).id)
+                }
+            }
+
+            // A - Auto-align nodes in a grid layout
+            if (e.key.toLowerCase() === 'a') {
+                e.preventDefault()
+                if (nodes.length === 0) return
+
+                const gridSpacing = 350 // Space between nodes
+                const columns = Math.ceil(Math.sqrt(nodes.length))
+
+                const alignedNodes = nodes.map((node, index) => {
+                    const row = Math.floor(index / columns)
+                    const col = index % columns
+                    return {
+                        ...(node as Node),
+                        position: {
+                            x: col * gridSpacing,
+                            y: row * gridSpacing,
+                        },
+                    }
+                })
+
+                setNodes(alignedNodes as never[])
+                // Fit view after alignment
+                setTimeout(() => fitView({ duration: 400, padding: 0.2 }), 100)
+            }
+
             // Ctrl+Shift+C - Clear cache for current app (debug feature)
             if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'c' && selectedAppId) {
                 e.preventDefault()
@@ -134,7 +169,7 @@ export function GraphCanvas() {
 
         window.addEventListener('keydown', handleKeyDown)
         return () => window.removeEventListener('keydown', handleKeyDown)
-    }, [fitView, selectNode, selectedNodeId, selectedAppId, data, setNodes, setEdges])
+    }, [fitView, selectNode, selectedNodeId, selectedAppId, data, setNodes, setEdges, nodes])
 
     const onConnect = useCallback(
         (params: Connection) => setEdges((eds) => addEdge(params, eds)),

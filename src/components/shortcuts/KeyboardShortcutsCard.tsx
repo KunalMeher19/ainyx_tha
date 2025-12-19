@@ -8,6 +8,8 @@ interface ShortcutItem {
 
 const shortcuts: ShortcutItem[] = [
     { keys: ['F'], description: 'Fit view to canvas' },
+    { keys: ['P'], description: 'Toggle inspector panel' },
+    { keys: ['A'], description: 'Align nodes in grid' },
     { keys: ['I', 'Escape'], description: 'Close inspector panel' },
     { keys: ['Delete', 'Backspace'], description: 'Delete selected node' },
 ]
